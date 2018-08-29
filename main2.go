@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 	"encoding/json"
+	"google.golang.org/appengine"
 )
 
 type Ping struct {
@@ -12,6 +13,7 @@ type Ping struct {
 
 func main() {
 	http.HandleFunc("/", pingHandler)
+	appengine.Main()
 }
 
 func pingHandler(w http.ResponseWriter, r *http.Request) {

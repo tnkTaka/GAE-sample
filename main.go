@@ -3,12 +3,14 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"google.golang.org/appengine"
 )
 
 func main() {
 	r := gin.Default()
 	ApiRouter(r.Group("/api"))
-	r.Run(":8080")
+	appengine.Main()
 }
 
 func ApiRouter(api *gin.RouterGroup)  {
