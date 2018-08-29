@@ -1,20 +1,31 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
+	"encoding/json"
+	"google.golang.org/appengine"
 )
 
+type Ping struct {
+	Status int	`json:"status"`
+	Text string `json:"text"`
+}
+
 func main() {
-	r := gin.Default()
-	ApiRouter(r.Group("/api"))
-	r.Run(":8080")
+	http.HandleFunc("/", pingHandler)
+	appengine.Main()
 }
 
-func ApiRouter(api *gin.RouterGroup)  {
-	api.GET("/",GetID)
-}
+func pingHandler(w http.ResponseWriter, r *http.Request) {
+	ping := Ping{http.StatusOK, "Hello World"}
 
-func GetID(c *gin.Context) {
-	c.JSON(http.StatusCreated, gin.H{"text":"Hello World"})
+	res, err := json.Marshal(ping)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(res)
 }
